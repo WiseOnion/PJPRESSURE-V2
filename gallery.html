@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photo Gallery - PJ Pressure Washing | Before & After Photos</title>
+    <meta name="description" content="See our pressure washing results! Browse before and after photos of residential and commercial projects in Fayetteville, NC.">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon_io/favicon-32x32.png">
+    <style>
+        /* Enhanced Gallery Styles */
+        .before-after-container {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            overflow: hidden;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .gallery-item.featured .before-after-container {
+            height: 400px;
+        }
+
+        .before-after-slider {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .before-image,
+        .after-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .before-image img,
+        .after-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .before-image {
+            z-index: 2;
+            clip-path: inset(0 50% 0 0);
+            transition: clip-path 0.1s ease-out;
+        }
+
+        .after-image {
+            z-index: 1;
+        }
+
+        .image-label {
+            position: absolute;
+            top: 1rem;
+            background: rgba(0, 0, 0, 0.75);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .before-image .image-label {
+            left: 1rem;
+        }
+
+        .after-image .image-label {
+            right: 1rem;
+        }
+
+        .slider-handle {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            width: 4px;
+            background: var(--secondary-color);
+            cursor: ew-resize;
+            transform: translateX(-50%);
+            z-index: 3;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+            pointer-events: none;
+        }
+
+        .slider-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 50px;
+            height: 50px;
+            background: var(--secondary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            border: 3px solid white;
+            font-size: 1.25rem;
+        }
+
+        .gallery-item {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .lightbox-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 10000;
+            padding: 2rem;
+            overflow-y: auto;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lightbox-modal.active {
+            display: flex;
+        }
+
+        .lightbox-content {
+            background: white;
+            border-radius: 20px;
+            max-width: 1200px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .lightbox-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 2rem;
+            background: var(--bg-gray);
+            border-bottom: 1px solid var(--border-color);
+            border-radius: 20px 20px 0 0;
+        }
+
+        .lightbox-close {
+            background: var(--primary-color);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 1.25rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lightbox-close:hover {
+            background: var(--primary-dark);
+            transform: rotate(90deg);
+        }
+
+        .lightbox-body {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 2rem;
+            padding: 2rem;
+        }
+
+        .lightbox-image-container .before-after-container {
+            height: 500px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .lightbox-details h4 {
+            font-size: 1.75rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .lightbox-details p {
+            color: var(--text-light);
+            line-height: 1.8;
+            margin-bottom: 2rem;
+        }
+
+        .project-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: var(--text-dark);
+            font-weight: 600;
+            padding: 1rem;
+            background: var(--bg-gray);
+            border-radius: 8px;
+        }
+
+        .meta-item i {
+            color: var(--primary-color);
+            width: 24px;
+            font-size: 1.25rem;
+        }
+
+        .lightbox-footer {
+            padding: 1.5rem 2rem;
+            background: var(--bg-gray);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            border-radius: 0 0 20px 20px;
+        }
+
+        @media (max-width: 768px) {
+            .lightbox-body {
+                grid-template-columns: 1fr;
+            }
+
+            .lightbox-image-container .before-after-container {
+                height: 300px;
+            }
+
+            .lightbox-footer {
+                flex-direction: column;
+            }
+
+            .lightbox-footer .btn {
+                width: 100%;
+            }
+        }
+
+        /* Loading Animation */
+        .gallery-item.loading {
+            opacity: 0.5;
+        }
+
+        .gallery-item img {
+            transition: opacity 0.3s ease;
+        }
+
+        /* Filter Animation */
+        .gallery-item.filtered-out {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Mobile Call Button -->
+    <a href="tel:9107586910" class="mobile-call-btn" aria-label="Call Now">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+        </svg>
+        <span>Call Now</span>
+    </a>
+
+    <!-- Header -->
+    <header class="header" id="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <a href="index.html"><img src="logo.png" alt="PJ Pressure Washing Logo"></a>
+                </div>
+                <div class="header-contact">
+                    <a href="tel:9107586910" class="phone-number">(910) 758-6910</a>
+                    <span class="availability">CALL OR TEXT 24/7</span>
+                </div>
+                <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle Menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="nav" id="nav">
+        <div class="container">
+            <ul class="nav-list">
+                <li><a href="index.html">HOME</a></li>
+                <li><a href="about.html">ABOUT</a></li>
+                <li><a href="services.html">SERVICES</a></li>
+                <li><a href="gallery.html" class="active">PHOTO GALLERY</a></li>
+                <li><a href="areas.html">SERVICE AREAS</a></li>
+                <li><a href="contact.html">CONTACT US</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Gallery Hero -->
+    <section class="gallery-hero">
+        <div class="hero-background"></div>
+        <div class="hero-overlay"></div>
+        <div class="container">
+            <div class="hero-content">
+                <h1>Photo Gallery</h1>
+                <p>See the PJ Pressure Washing difference - Before & After</p>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <span class="stat-number">500+</span>
+                        <span class="stat-label">Projects Completed</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">100%</span>
+                        <span class="stat-label">Customer Satisfaction</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">6+</span>
+                        <span class="stat-label">Years Experience</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Filter Section -->
+    <section class="section">
+        <div class="container">
+            <div class="gallery-header">
+                <h2>Our Work Speaks for Itself</h2>
+                <p class="lead-text">Browse our before and after gallery to see the amazing transformations we can achieve for your property!</p>
+                
+                <div class="gallery-filters">
+                    <button class="filter-btn active" data-filter="all">All Projects</button>
+                    <button class="filter-btn" data-filter="residential">Residential</button>
+                    <button class="filter-btn" data-filter="commercial">Commercial</button>
+                    <button class="filter-btn" data-filter="concrete">Concrete</button>
+                    <button class="filter-btn" data-filter="storefront">Storefront</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Grid -->
+    <section class="section section-gray">
+        <div class="container">
+            <div class="gallery-grid" id="galleryGrid">
+                
+                <!-- Project 1: Driveway Transformation (Featured) -->
+                <div class="gallery-item featured" data-category="residential">
+                    <div class="gallery-item-header">
+                        <span class="category-badge">Featured</span>
+                        <span class="project-type">Residential</span>
+                    </div>
+                    <div class="before-after-container" data-project="1">
+                        <div class="before-after-slider">
+                            <div class="before-image">
+                                <img src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=800&q=80" alt="Dirty driveway before pressure washing">
+                                <span class="image-label">Before</span>
+                            </div>
+                            <div class="after-image">
+                                <img src="https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=800&q=80" alt="Clean driveway after pressure washing">
+                                <span class="image-label">After</span>
+                            </div>
+                        </div>
+                        <div class="slider-handle">
+                            <div class="slider-button">⟷</div>
+                        </div>
+                    </div>
+                    <div class="gallery-item-content">
+                        <h3>Driveway Transformation</h3>
+                        <p>Complete driveway restoration removing years of built-up dirt, oil stains, and discoloration. Red clay removal specialty.</p>
+                        <div class="project-details">
+                            <span><i class="fas fa-map-marker-alt"></i> Fayetteville, NC</span>
+                            <span><i class="fas fa-clock"></i> 2 hours</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 2: Commercial Storefront -->
+                <div class="gallery-item" data-category="commercial">
+                    <div class="gallery-item-header">
+                        <span class="project-type">Commercial</span>
+                    </div>
+                    <div class="before-after-container" data-project="2">
+                        <div class="before-after-slider">
+                            <div class="before-image">
+                                <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80" alt="Dirty commercial building before">
+                                <span class="image-label">Before</span>
+                            </div>
+                            <div class="after-image">
+                                <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&q=80" alt="Clean commercial building after">
+                                <span class="image-label">After</span>
+                            </div>
+                        </div>
+                        <div class="slider-handle">
+                            <div class="slider-button">⟷</div>
+                        </div>
+                    </div>
+                    <div class="gallery-item-content">
+                        <h3>Storefront Cleaning</h3>
+                        <p>Professional storefront cleaning to enhance curb appeal and customer experience. Mildew and dirt removal.</p>
+                        <div class="project-details">
+                            <span><i class="fas fa-map-marker-alt"></i> Spring Lake, NC</span>
+                            <span><i class="fas fa-clock"></i> 3 hours</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 3: Concrete Patio -->
+                <div class="gallery-item" data-category="concrete">
+                    <div class="gallery-item-header">
+                        <span class="project-type">Concrete</span>
+                    </div>
+                    <div class="before-after-container" data-project="3">
+                        <div class="before-after-slider">
+                            <div class="before-image">
+                                <img src="https://images.unsplash.com/photo-1600585152915-d208bec867a1?w=800&q=80" alt="Dirty patio before">
+                                <span class="image-label">Before</span>
+                            </div>
+                            <div class="after-image">
+                                <img src="https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=800&q=80" alt="Clean patio after">
+                                <span class="image-label">After</span>
+                            </div>
+                        </div>
+                        <div class="slider-handle">
+                            <div class="slider-button">⟷</div>
+                        </div>
+                    </div>
+                    <div class="gallery-item-content">
+                        <h3>Patio Restoration</h3>
+                        <p>Concrete patio cleaning removing mold, mildew, and years of discoloration. Looks brand new!</p>
+                        <div class="project-details">
+                            <span><i class="fas fa-map-marker-alt"></i> Hope Mills, NC</span>
+                            <span><i class="fas fa-clock"></i> 1.5 hours</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 4: Deck Cleaning -->
+                <div class="gallery-item" data-category="residential">
+                    <div class="gallery-item-header">
+                        <span class="project-type">Residential</span>
+                    </div>
+                    <div class="before-after-container" data-project="4">
+                        <div class="before-after-slider">
+                            <div class="before-image">
+                                <img src="https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=800&q=80" alt="Weathered deck before">
+                                <span class="image-label">Before</span>
+                            </div>
+                            <div class="after-image">
+                                <img src="https://images.unsplash.com/photo-1600566752355-35792bedcfea?w=800&q=80" alt="Clean deck after">
+                                <span class="image-label">After</span>
+                            </div>
+                        </div>
+                        <div class="slider-handle">
+                            <div class="slider-button">⟷</div>
+                        </div>
+                    </div>
+                    <div class="gallery-item-content">
+                        <h3>Wood Deck Cleaning</h3>
+                        <p>Professional wood deck cleaning and preparation for staining. Removes dirt, mildew, and weathering.</p>
+                        <div class="project-details">
+                            <span><i class="fas fa-map-marker-alt"></i> Eastover, NC</span>
+                            <span><i class="fas fa-clock"></i> 2.5 hours</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 5: Shopping Center -->
+                <div class="gallery-item" data-category="storefront">
+                    <div class="gallery-item-header">
+                        <span class="project-type">Storefront</span>
+                    </div>
+                    <div class="before-after-container" data-project="5">
+                        <div class="before-after-slider">
+                            <div class="before-image">
+                                <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&q=80" alt="Dirty shopping center">
+                                <span class="image-label">Before</span>
+                            </div>
+                            <div class="after-image">
+                                <img src="https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?w=800&q=80" alt="Clean shopping center">
+                                <span class="image-label">After</span>
+                            </div>
+                        </div>
+                        <div class="slider-handle">
+                            <div class="slider-button">⟷</div>
+                        </div>
+                    </div>
+                    <div class="gallery-item-content">
+                        <h3>Shopping Center Cleaning</h3>
+                        <p>Complete shopping center exterior cleaning and maintenance. Enhances property value and tenant satisfaction.</p>
+                        <div class="project-details">
+                            <span><i class="fas fa-map-marker-alt"></i> Fayetteville, NC</span>
+                            <span><i class="fas fa-clock"></i> 4 hours</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 6: Parking Lot -->
+                <div class="gallery-item" data-category="concrete">
+                    <div class="gallery-item-header">
+                        <span class="project-type">Concrete</span>
+                    </div>
+                    <div class="before-after-container" data-project="6">
+                        <div class="before-after-slider">
+                            <div class="before-image">
+                                <img src="https://images.unsplash.com/photo-1590674899484-d5640e854abe?w=800&q=80" alt="Dirty parking lot">
+                                <span class="image-label">Before</span>
+                            </div>
+                            <div class="after-image">
+                                <img src="https://images.unsplash.com/photo-1506521781263-d8422e82f27a?w=800&q=80" alt="Clean parking lot">
+                                <span class="image-label">After</span>
+                            </div>
+                        </div>
+                        <div class="slider-handle">
+                            <div class="slider-button">⟷</div>
+                        </div>
+                    </div>
+                    <div class="gallery-item-content">
+                        <h3>Parking Lot Cleaning</h3>
+                        <p>Commercial parking lot cleaning with oil stain removal. Professional results that impress customers.</p>
+                        <div class="project-details">
+                            <span><i class="fas fa-map-marker-alt"></i> Cameron, NC</span>
+                            <span><i class="fas fa-clock"></i> 3.5 hours</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Ready to See Your Property Transformed?</h2>
+                <p>Get your free, no-obligation quote today and see why we're Fayetteville's most trusted pressure washing service.</p>
+                <div class="cta-buttons">
+                    <a href="tel:9107586910" class="btn btn-primary btn-lg">Call (910) 758-6910</a>
+                    <a href="contact.html" class="btn btn-secondary btn-lg">Request Quote Online</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>PJ PRESSURE WASHING</h3>
+                    <p>Professional pressure washing services serving Cumberland County and surrounding areas for over 6 years.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Services</h4>
+                    <ul>
+                        <li>Residential Washing</li>
+                        <li>Commercial Washing</li>
+                        <li>Storefront Cleaning</li>
+                        <li>Concrete Cleaning</li>
+                        <li>Fleet & Dumpster Wash Out</li>
+                        <li>Trash Bin Cleaning</li>
+                        <li>Irrigation Sled Systems</li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact Info</h4>
+                    <ul class="footer-contact">
+                        <li><strong>Phone:</strong> <a href="tel:9107586910">(910) 758-6910</a></li>
+                        <li><strong>Email:</strong> <a href="mailto:pjpressurewashing2@gmail.com">pjpressurewashing2@gmail.com</a></li>
+                        <li><strong>Address:</strong> 475 Sheffield Court<br>Fayetteville, NC 28314</li>
+                        <li><strong>Hours:</strong> 7am - 5pm<br>Call/Text 24/7</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 PJ Pressure Washing. All rights reserved. | Licensed & Insured</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Lightbox Modal -->
+    <div class="lightbox-modal" id="lightboxModal">
+        <div class="lightbox-content">
+            <div class="lightbox-header">
+                <h3 id="lightboxTitle">Project Details</h3>
+                <button class="lightbox-close" id="lightboxClose">×</button>
+            </div>
+            <div class="lightbox-body">
+                <div class="lightbox-image-container">
+                    <div class="before-after-container" id="lightboxSlider">
+                        <div class="before-after-slider">
+                            <div class="before-image">
+                                <img id="lightboxBeforeImg" src="" alt="Before">
+                                <span class="image-label">Before</span>
+                            </div>
+                            <div class="after-image">
+                                <img id="lightboxAfterImg" src="" alt="After">
+                                <span class="image-label">After</span>
+                            </div>
+                        </div>
+                        <div class="slider-handle">
+                            <div class="slider-button">⟷</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="lightbox-details">
+                    <h4 id="lightboxProjectTitle">Project Title</h4>
+                    <p id="lightboxProjectDescription">Project description</p>
+                    <div class="project-meta">
+                        <div class="meta-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span id="lightboxLocation">Location</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-clock"></i>
+                            <span id="lightboxDuration">Duration</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-tag"></i>
+                            <span id="lightboxCategory">Category</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="lightbox-footer">
+                <a href="contact.html" class="btn btn-primary">Get Similar Results</a>
+                <a href="tel:9107586910" class="btn btn-secondary">Call Now</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Enhanced Before/After Slider
+        class BeforeAfterSlider {
+            constructor(container) {
+                this.container = container;
+                this.slider = container.querySelector('.slider-handle');
+                this.beforeImage = container.querySelector('.before-image');
+                this.isDragging = false;
+                
+                this.init();
+            }
+            
+            init() {
+                // Mouse events
+                this.container.addEventListener('mousedown', this.startDrag.bind(this));
+                document.addEventListener('mousemove', this.drag.bind(this));
+                document.addEventListener('mouseup', this.stopDrag.bind(this));
+                
+                // Touch events
+                this.container.addEventListener('touchstart', this.startDrag.bind(this));
+                document.addEventListener('touchmove', this.drag.bind(this));
+                document.addEventListener('touchend', this.stopDrag.bind(this));
+                
+                // Hover effect for desktop
+                this.container.addEventListener('mouseenter', () => {
+                    if (!this.isDragging) {
+                        this.slider.style.opacity = '1';
+                    }
+                });
+            }
+            
+            startDrag(e) {
+                this.isDragging = true;
+                this.updateSlider(e);
+                e.preventDefault();
+            }
+            
+            drag(e) {
+                if (!this.isDragging) return;
+                this.updateSlider(e);
+            }
+            
+            stopDrag() {
+                this.isDragging = false;
+            }
+            
+            updateSlider(e) {
+                const rect = this.container.getBoundingClientRect();
+                const x = (e.type.includes('touch') ? e.touches[0].clientX : e.clientX) - rect.left;
+                const percentage = Math.max(0, Math.min(100, (x / rect.width) * 100));
+                
+                this.beforeImage.style.clipPath = `inset(0 ${100 - percentage}% 0 0)`;
+                this.slider.style.left = `${percentage}%`;
+            }
+        }
+
+        // Initialize all sliders
+        document.addEventListener('DOMContentLoaded', () => {
+            const containers = document.querySelectorAll('.before-after-container');
+            containers.forEach(container => new BeforeAfterSlider(container));
+            
+            // Filter functionality
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            const galleryItems = document.querySelectorAll('.gallery-item');
+            
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    
+                    const filter = btn.dataset.filter;
+                    
+                    galleryItems.forEach(item => {
+                        if (filter === 'all' || item.dataset.category === filter) {
+                            item.classList.remove('filtered-out');
+                            item.style.animation = 'fadeInUp 0.6s ease-out';
+                        } else {
+                            item.classList.add('filtered-out');
+                        }
+                    });
+                });
+            });
+            
+            // Lightbox functionality
+            const lightboxModal = document.getElementById('lightboxModal');
+            const lightboxClose = document.getElementById('lightboxClose');
+            
+            galleryItems.forEach(item => {
+                item.addEventListener('click', (e) => {
+                    // Don't open if clicking the slider handle
+                    if (e.target.closest('.slider-handle')) return;
+                    
+                    const title = item.querySelector('h3').textContent;
+                    const description = item.querySelector('.gallery-item-content p').textContent;
+                    const location = item.querySelector('.project-details span:first-child').textContent.replace(/.*\s/, '');
+                    const duration = item.querySelector('.project-details span:last-child').textContent.replace(/.*\s/, '');
+                    const category = item.querySelector('.project-type').textContent;
+                    
+                    const beforeImg = item.querySelector('.before-image img').src;
+                    const afterImg = item.querySelector('.after-image img').src;
+                    
+                    document.getElementById('lightboxProjectTitle').textContent = title;
+                    document.getElementById('lightboxProjectDescription').textContent = description;
+                    document.getElementById('lightboxLocation').textContent = location;
+                    document.getElementById('lightboxDuration').textContent = duration;
+                    document.getElementById('lightboxCategory').textContent = category;
+                    
+                    document.getElementById('lightboxBeforeImg').src = beforeImg;
+                    document.getElementById('lightboxAfterImg').src = afterImg;
+                    
+                    lightboxModal.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                    
+                    // Initialize slider for lightbox
+                    setTimeout(() => {
+                        const lightboxSlider = document.getElementById('lightboxSlider');
+                        new BeforeAfterSlider(lightboxSlider);
+                    }, 100);
+                });
+            });
+            
+            lightboxClose.addEventListener('click', () => {
+                lightboxModal.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            });
+            
+            lightboxModal.addEventListener('click', (e) => {
+                if (e.target === lightboxModal) {
+                    lightboxModal.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
