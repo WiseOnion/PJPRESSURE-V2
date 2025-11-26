@@ -1693,28 +1693,6 @@ body.menu-open {
     object-fit: cover;
 }
 
-.image-label {
-    position: absolute;
-    top: 1rem;
-    left: 1rem;
-    background: rgba(0, 0, 0, 0.7);
-    color: white;
-    padding: 0.25rem 0.75rem;
-    border-radius: 20px;
-    font-size: 0.875rem;
-    font-weight: 600;
-    z-index: 2;
-}
-
-.after-image {
-    clip-path: inset(0 50% 0 0);
-    transition: clip-path 0.3s ease;
-}
-
-.before-after-container:hover .after-image {
-    clip-path: inset(0 0 0 0);
-}
-
 .gallery-cta {
     text-align: center;
     margin-top: 3rem;
@@ -2224,12 +2202,6 @@ body.menu-open {
     height: 100%;
 }
 
-.before-image {
-    z-index: 2;
-    clip-path: inset(0 50% 0 0);
-    transition: clip-path 0.3s ease;
-}
-
 .image-label {
     position: absolute;
     top: 1rem;
@@ -2715,13 +2687,457 @@ body.menu-open {
 }
 
 /* ===================================
-   CLEAN GALLERY STYLES
-   =================================== */
-.after-image {
-    clip-path: inset(0 50% 0 0);
-    transition: clip-path 0.3s ease;
+    ENHANCED GALLERY STYLES FROM GALLERY.HTML
+    =================================== */
+
+/* Enhanced Gallery Styles */
+.before-after-container {
+    position: relative;
+    width: 100%;
+    height: 300px;
+    overflow: hidden;
+    cursor: pointer;
+    user-select: none;
+    touch-action: none; /* Add this line */
 }
 
-.before-after-container:hover .after-image {
-    clip-path: inset(0 0 0 0);
+.gallery-item.featured .before-after-container {
+    height: 400px;
+}
+
+.before-after-slider {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.before-image,
+.after-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.before-image img,
+.after-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.before-image {
+    z-index: 2;
+    clip-path: inset(0 50% 0 0);
+}
+
+.after-image {
+    z-index: 1;
+    clip-path: inset(0 0 0 0); /* Make sure after image is fully visible */
+}
+
+/* Image Label Positioning Fix */
+.image-label {
+    position: absolute;
+    top: 1rem;
+    background: rgba(0, 0, 0, 0.75);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    font-weight: 600;
+    font-size: 0.875rem;
+    z-index: 10;
+    pointer-events: none;
+}
+
+/* Before label on LEFT side */
+.before-image .image-label {
+    left: 1rem;
+}
+
+/* After label on RIGHT side */
+.after-image .image-label {
+    right: 1rem;
+}
+
+.slider-handle {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 4px;
+    background: var(--secondary-color);
+    cursor: ew-resize;
+    transform: translateX(-50%);
+    z-index: 3;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+    transition: opacity 0.3s ease;
+}
+
+.before-after-container:hover .slider-handle {
+    opacity: 1;
+}
+
+.slider-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50px;
+    height: 50px;
+    background: var(--secondary-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-color);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    border: 3px solid white;
+    font-size: 1.25rem;
+    pointer-events: none;
+}
+
+.gallery-item {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.lightbox-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    z-index: 10000;
+    padding: 2rem;
+    overflow-y: auto;
+    align-items: center;
+    justify-content: center;
+}
+
+.lightbox-modal.active {
+    display: flex;
+}
+
+.lightbox-content {
+    background: white;
+    border-radius: 20px;
+    max-width: 1200px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+}
+
+.lightbox-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 2rem;
+    background: var(--bg-gray);
+    border-bottom: 1px solid var(--border-color);
+    border-radius: 20px 20px 0 0;
+}
+
+.lightbox-close {
+    background: var(--primary-color);
+    border: none;
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 1.25rem;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.lightbox-close:hover {
+    background: var(--primary-dark);
+    transform: rotate(90deg);
+}
+
+.lightbox-body {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 2rem;
+    padding: 2rem;
+}
+
+.lightbox-image-container .before-after-container {
+    height: 500px;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.lightbox-details h4 {
+    font-size: 1.75rem;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.lightbox-details p {
+    color: var(--text-light);
+    line-height: 1.8;
+    margin-bottom: 2rem;
+}
+
+.project-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.meta-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: var(--text-dark);
+    font-weight: 600;
+    padding: 1rem;
+    background: var(--bg-gray);
+    border-radius: 8px;
+}
+
+.meta-item i {
+    color: var(--primary-color);
+    width: 24px;
+    font-size: 1.25rem;
+}
+
+.lightbox-footer {
+    padding: 1.5rem 2rem;
+    background: var(--bg-gray);
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    border-radius: 0 0 20px 20px;
+}
+
+@media (max-width: 768px) {
+    .lightbox-body {
+        grid-template-columns: 1fr;
+    }
+
+    .lightbox-image-container .before-after-container {
+        height: 300px;
+    }
+
+    .lightbox-footer {
+        flex-direction: column;
+    }
+
+    .lightbox-footer .btn {
+        width: 100%;
+    }
+}
+
+/* Loading Animation */
+.gallery-item.loading {
+    opacity: 0.5;
+}
+
+.gallery-item img {
+    transition: opacity 0.3s ease;
+}
+
+/* Filter Animation */
+.gallery-item.filtered-out {
+    display: none;
+}
+/* ===================================
+   BEFORE/AFTER SLIDER - COMPLETE FIX
+   =================================== */
+
+/* Container */
+.before-after-container {
+    position: relative;
+    width: 100%;
+    height: 300px;
+    overflow: hidden;
+    cursor: pointer;
+    user-select: none;
+    touch-action: none;
+}
+
+.gallery-item.featured .before-after-container {
+    height: 400px;
+}
+
+/* Slider wrapper */
+.before-after-slider {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+/* Image containers */
+.before-image,
+.after-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.before-image img,
+.after-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Layering - After behind, Before on top */
+.after-image {
+    z-index: 1;
+}
+
+.before-image {
+    z-index: 2;
+    clip-path: inset(0 50% 0 0);
+}
+
+/* Image Labels */
+.image-label {
+    position: absolute;
+    top: 1rem;
+    background: rgba(0, 0, 0, 0.75);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    font-weight: 600;
+    font-size: 0.875rem;
+    z-index: 10;
+    pointer-events: none;
+}
+
+/* Before label on LEFT */
+.before-image .image-label {
+    left: 1rem;
+}
+
+/* After label on RIGHT */
+.after-image .image-label {
+    right: 1rem;
+}
+
+/* Slider Handle */
+.slider-handle {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 4px;
+    background: var(--secondary-color);
+    cursor: ew-resize;
+    transform: translateX(-50%);
+    z-index: 3;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+    transition: opacity 0.3s ease;
+}
+
+.before-after-container:hover .slider-handle {
+    opacity: 1;
+}
+
+/* Slider Button */
+.slider-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50px;
+    height: 50px;
+    background: var(--secondary-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-color);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    border: 3px solid white;
+    font-size: 1.25rem;
+    pointer-events: none;
+}
+
+/* Gallery Item Styles */
+.gallery-item {
+    background: var(--text-white);
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+}
+
+.gallery-item:hover {
+    transform: translateY(-10px);
+    box-shadow: var(--shadow-lg);
+}
+
+.gallery-item.featured {
+    grid-column: span 2;
+}
+
+/* Animation */
+.gallery-item {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Filter Animation */
+.gallery-item.filtered-out {
+    display: none;
+}
+
+/* Lightbox Before/After Container */
+.lightbox-image-container .before-after-container {
+    height: 500px;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+@media (max-width: 768px) {
+    .gallery-item .before-after-container {
+        height: 250px;
+    }
+    
+    .gallery-item.featured .before-after-container {
+        height: 300px;
+    }
+    
+    .lightbox-image-container .before-after-container {
+        height: 300px;
+    }
 }
