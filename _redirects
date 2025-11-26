@@ -1,0 +1,13 @@
+# Redirect /pages/* to root
+/pages/about    /about    301
+/pages/areas    /areas    301
+/pages/contact  /contact  301
+/pages/gallery  /gallery  301
+/pages/services /services 301
+
+# Clean URLs - point to .html files
+/about    /pages/about.html    200
+/areas    /pages/areas.html    200
+/contact  /pages/contact.html  200
+/gallery  /pages/gallery.html  200
+/services /pages/services.html 200
