@@ -228,7 +228,7 @@ ul {
     left: 0;
     right: 0;
     bottom: 0;
-    background: url('../images/background.jpg') center/cover no-repeat;
+    background: url('../images/hero-backgrounds/home.jpg') center/cover no-repeat;
     z-index: 0;
 }
 
@@ -565,7 +565,6 @@ ul {
    TESTIMONIALS / REVIEWS - SLIDING
    =================================== */
 .reviews-section {
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
     padding: 5rem 0;
     color: var(--text-white);
     overflow: hidden;
@@ -3703,4 +3702,77 @@ body {
         width: 100%;
         overflow-x: hidden;
     }
+}
+/* ===================================
+   PAGE HERO WITH BACKGROUND IMAGE
+   =================================== */
+.page-hero {
+    position: relative;
+    color: var(--text-white);
+    padding: 4rem 0;
+    text-align: center;
+    overflow: hidden;
+}
+
+/* Background Image Layer */
+.page-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('../images/hero-backgrounds/home.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: 0;
+}
+
+/* Gradient Overlay */
+.page-hero::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(0, 136, 204, 0.9) 0%, rgba(0, 102, 153, 0.85) 100%);
+    z-index: 1;
+}
+
+.page-hero > * {
+    position: relative;
+    z-index: 2;
+}
+
+/* Different Background Images Per Page */
+.page-hero-about::before {
+    background-image: url('../images/hero-backgrounds/about.jpg');
+}
+
+.page-hero-services::before {
+    background-image: url('../images/hero-backgrounds/services.jpg');
+}
+
+.page-hero-gallery::before {
+    background-image: url('../images/hero-backgrounds/gallery.jpg');
+}
+
+.page-hero-areas::before {
+    background-image: url('../images/hero-backgrounds/areas.jpg');
+}
+
+.page-hero-contact::before {
+    background-image: url('../images/hero-backgrounds/contact.jpg');
+}
+
+/* Wisdomlayers Credit Link */
+.footer-bottom a[href*="wisdomlayers"] {
+    transition: var(--transition);
+}
+
+.footer-bottom a[href*="wisdomlayers"]:hover {
+    color: var(--text-white) !important;
+    text-decoration: none !important;
 }
