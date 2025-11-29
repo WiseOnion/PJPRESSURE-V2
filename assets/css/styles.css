@@ -582,6 +582,7 @@ ul {
    =================================== */
 .reviews-section {
   padding: 5rem 0;
+  background: var(--primary-color);
   color: var(--text-white);
   overflow: hidden;
   position: relative;
