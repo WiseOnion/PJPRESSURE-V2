@@ -4,26 +4,39 @@
 const mobileMenuToggle = document.getElementById('mobileMenuToggle');
 const nav = document.getElementById('nav');
 
+function openMenu() {
+    nav.classList.add('active');
+    mobileMenuToggle.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeMenu() {
+    nav.classList.remove('active');
+    mobileMenuToggle.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
 if (mobileMenuToggle) {
     mobileMenuToggle.addEventListener('click', () => {
-        nav.classList.toggle('active');
-        mobileMenuToggle.classList.toggle('active');
+        if (nav.classList.contains('active')) {
+            closeMenu();
+        } else {
+            openMenu();
+        }
     });
 
     // Close menu when clicking nav links
     const navLinks = document.querySelectorAll('.nav-list a');
     navLinks.forEach(link => {
         link.addEventListener('click', () => {
-            nav.classList.remove('active');
-            mobileMenuToggle.classList.remove('active');
+            closeMenu();
         });
     });
 
-    // Close menu when clicking outside
-    document.addEventListener('click', (e) => {
-        if (!nav.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
-            nav.classList.remove('active');
-            mobileMenuToggle.classList.remove('active');
+    // Close on Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && nav.classList.contains('active')) {
+            closeMenu();
         }
     });
 }
@@ -95,28 +108,34 @@ window.addEventListener('scroll', updateActiveNavLink);
 // ===================================
 const sampleReviews = [
     {
+        author: "R L Smith",
+        rating: 5,
+        date: "10 months ago",
+        text: "PJ Pressure Washing power washed my two-story home in one morning and did an excellent job. The house looks brand new. I am very pleased with the service, price, and results."
+    },
+    {
+        author: "Tisha Evans",
+        rating: 5,
+        date: "11 months ago",
+        text: "I highly recommend PJ Pressure Washing! They provided pressure washing services for my buyer client and did an exceptional job. Professional, efficient, and delivered top-quality results."
+    },
+    {
+        author: "Marcus Leavell",
+        rating: 5,
+        date: "1 month ago",
+        text: "Outstanding job pressure washing house and surrounding areas. Great price and customer service. I plan to use them again in the future!"
+    },
+    {
         author: "Carlton Burse",
         rating: 5,
         date: "7 months ago",
         text: "Great work!! These guys do a wonderful job and are very affordable. I highly recommend these guys for all your pressure washing needs. If I could I'd give them 10 stars."
     },
     {
-        author: "Suzanne Daniels",
-        rating: 5,
-        date: "1 week ago",
-        text: "The house looks brand new! Quick to get you on their schedule and the price is affordable. Will definitely be using their services again. They're quick and do quality work."
-    },
-    {
         author: "Aida Patchana",
         rating: 5,
-        date: "a year ago",
+        date: "1 year ago",
         text: "I really satisfied with the service! He did an amazing job, and great personality! I will definitely will recommend his service to anyone! Thank you!"
-    },
-    {
-        author: "Darlene Burdsall",
-        rating: 5,
-        date: "One week ago",
-        text: "Our house looks brand new! Quick to get you on their schedule and the price is affordable. Will definitely be using their services again. They're quick and do quality work."
     }
 ];
 
@@ -154,112 +173,150 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 // ===================================
-// ENHANCED BEFORE/AFTER SLIDER - COMPLETE FIX
+// CONTACT FORM
+// ===================================
+const contactForm = document.getElementById('contactForm');
+const successMessage = document.getElementById('successMessage');
+
+if (contactForm) {
+    contactForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const submitBtn = contactForm.querySelector('[type="submit"]');
+        const originalText = submitBtn.textContent;
+        submitBtn.textContent = 'Sending...';
+        submitBtn.disabled = true;
+
+        try {
+            const response = await fetch(contactForm.action, {
+                method: 'POST',
+                body: new FormData(contactForm),
+                headers: { 'Accept': 'application/json' }
+            });
+
+            if (response.ok) {
+                contactForm.style.display = 'none';
+                if (successMessage) {
+                    successMessage.classList.add('visible');
+                    successMessage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
+            } else {
+                submitBtn.textContent = 'Failed — Try Again';
+                submitBtn.disabled = false;
+            }
+        } catch {
+            submitBtn.textContent = 'Failed — Try Again';
+            submitBtn.disabled = false;
+        }
+    });
+}
+
+// ===================================
+// BEFORE/AFTER SLIDER
 // ===================================
 
 class BeforeAfterSlider {
     constructor(container) {
         this.container = container;
-        this.slider = container.querySelector('.slider-handle');
+        this.handle = container.querySelector('.slider-handle');
         this.beforeImage = container.querySelector('.before-image');
         this.isDragging = false;
+        this.position = 50; // percent
 
-        // Only initialize if not already done and elements exist
-        if (this.slider && this.beforeImage && !container.dataset.sliderInit) {
+        this.afterImage = container.querySelector('.after-image');
+
+        if (this.handle && this.beforeImage && this.afterImage) {
+            this.destroy(); // clean up any old listeners
             this.init();
         }
     }
 
+    destroy() {
+        // Remove old bound listeners if re-initializing
+        if (this._onMouseDown) this.container.removeEventListener('mousedown', this._onMouseDown);
+        if (this._onTouchStart) this.container.removeEventListener('touchstart', this._onTouchStart);
+        if (this._onMouseMove) document.removeEventListener('mousemove', this._onMouseMove);
+        if (this._onMouseUp) document.removeEventListener('mouseup', this._onMouseUp);
+        if (this._onTouchMove) document.removeEventListener('touchmove', this._onTouchMove);
+        if (this._onTouchEnd) document.removeEventListener('touchend', this._onTouchEnd);
+    }
+
     init() {
-        // Mark as initialized
-        this.container.dataset.sliderInit = 'true';
-        
-        // Remove any hover interference
-        this.container.style.pointerEvents = 'auto';
-        
-        // Mouse events
-        this.container.addEventListener('mousedown', this.startDrag.bind(this));
-        document.addEventListener('mousemove', this.drag.bind(this));
-        document.addEventListener('mouseup', this.stopDrag.bind(this));
+        this._onMouseDown = this.startDrag.bind(this);
+        this._onMouseMove = this.drag.bind(this);
+        this._onMouseUp = this.stopDrag.bind(this);
+        this._onTouchStart = this.startDrag.bind(this);
+        this._onTouchMove = this.drag.bind(this);
+        this._onTouchEnd = this.stopDrag.bind(this);
 
-        // Touch events
-        this.container.addEventListener('touchstart', this.startDrag.bind(this), { passive: false });
-        document.addEventListener('touchmove', this.drag.bind(this), { passive: false });
-        document.addEventListener('touchend', this.stopDrag.bind(this));
+        this.container.addEventListener('mousedown', this._onMouseDown);
+        document.addEventListener('mousemove', this._onMouseMove);
+        document.addEventListener('mouseup', this._onMouseUp);
+        this.container.addEventListener('touchstart', this._onTouchStart, { passive: false });
+        document.addEventListener('touchmove', this._onTouchMove, { passive: false });
+        document.addEventListener('touchend', this._onTouchEnd);
 
-        // Set initial position (50% split)
-        const rect = this.container.getBoundingClientRect();
-        if (rect.width > 0) {
-            const centerX = rect.left + (rect.width / 2);
-            this.updateSlider({ clientX: centerX, type: 'init' });
-        }
-        
-        console.log('Slider initialized:', this.container.dataset.project || 'lightbox');
+        this.setPosition(50);
+    }
+
+    getX(e) {
+        if (e.touches && e.touches.length > 0) return e.touches[0].clientX;
+        return e.clientX;
     }
 
     startDrag(e) {
         this.isDragging = true;
         this.container.style.cursor = 'ew-resize';
-        this.updateSlider(e);
+        this.updateFromEvent(e);
         e.preventDefault();
     }
 
     drag(e) {
         if (!this.isDragging) return;
-        this.updateSlider(e);
+        this.updateFromEvent(e);
         e.preventDefault();
     }
 
     stopDrag() {
+        if (!this.isDragging) return;
         this.isDragging = false;
-        this.container.style.cursor = 'pointer';
+        this.container.style.cursor = 'ew-resize';
     }
 
-    updateSlider(e) {
+    updateFromEvent(e) {
         const rect = this.container.getBoundingClientRect();
-        let x;
-        
-        if (e.type === 'init') {
-            x = e.clientX - rect.left;
-        } else if (e.type.includes('touch')) {
-            if (e.touches && e.touches.length > 0) {
-                x = e.touches[0].clientX - rect.left;
-            } else {
-                return;
-            }
-        } else {
-            x = e.clientX - rect.left;
-        }
-        
-        const percentage = Math.max(0, Math.min(100, (x / rect.width) * 100));
+        const x = this.getX(e) - rect.left;
+        const pct = Math.max(0, Math.min(100, (x / rect.width) * 100));
+        this.setPosition(pct);
+    }
 
-        // Update the before image clip path
-        this.beforeImage.style.clipPath = `inset(0 ${100 - percentage}% 0 0)`;
-        this.slider.style.left = `${percentage}%`;
+    setPosition(pct) {
+        this.position = pct;
+        // before visible on LEFT: clip its right edge
+        this.beforeImage.style.clipPath = `inset(0 ${100 - pct}% 0 0)`;
+        // after visible on RIGHT: clip its left edge
+        this.afterImage.style.clipPath = `inset(0 0 0 ${pct}%)`;
+        this.handle.style.left = `${pct}%`;
     }
 }
 
-// Initialize all sliders function
+// Store slider instances so lightbox can be re-inited cleanly
+const sliderInstances = new Map();
+
 function initAllSliders() {
-    const containers = document.querySelectorAll('.before-after-container');
-    console.log(`Found ${containers.length} slider containers`);
-    
-    containers.forEach((container, index) => {
-        if (!container.dataset.sliderInit) {
-            console.log(`Initializing slider ${index + 1}`);
-            new BeforeAfterSlider(container);
+    document.querySelectorAll('.before-after-container:not(#lightboxSlider)').forEach(container => {
+        if (sliderInstances.has(container)) {
+            // Re-apply position in case container was hidden during first init
+            sliderInstances.get(container).setPosition(50);
+        } else {
+            sliderInstances.set(container, new BeforeAfterSlider(container));
         }
     });
 }
 
 // Initialize on DOM ready
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOM Content Loaded - Initializing sliders...');
-    
-    // Small delay to ensure images are in DOM
-    setTimeout(() => {
-        initAllSliders();
-    }, 100);
+    initAllSliders();
 
     // Filter functionality
     const filterBtns = document.querySelectorAll('.filter-btn');
@@ -270,17 +327,16 @@ document.addEventListener('DOMContentLoaded', () => {
             btn.addEventListener('click', () => {
                 filterBtns.forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
-
                 const filter = btn.dataset.filter;
-
                 galleryItems.forEach(item => {
                     if (filter === 'all' || item.dataset.category === filter) {
                         item.classList.remove('filtered-out');
-                        item.style.animation = 'fadeInUp 0.6s ease-out';
                     } else {
                         item.classList.add('filtered-out');
                     }
                 });
+                // Re-init sliders that were hidden during initial load
+                initAllSliders();
             });
         });
     }
@@ -288,21 +344,16 @@ document.addEventListener('DOMContentLoaded', () => {
     // Lightbox functionality
     const lightboxModal = document.getElementById('lightboxModal');
     const lightboxClose = document.getElementById('lightboxClose');
+    let lightboxSliderInstance = null;
 
     if (lightboxModal && lightboxClose) {
         galleryItems.forEach(item => {
             item.addEventListener('click', (e) => {
-                // Don't open if clicking inside the slider area
-                if (e.target.closest('.before-after-container')) {
-                    return;
-                }
-
                 const title = item.querySelector('h3').textContent;
                 const description = item.querySelector('.gallery-item-content p').textContent;
                 const location = item.querySelector('.project-details span:first-child').textContent.trim();
                 const duration = item.querySelector('.project-details span:last-child').textContent.trim();
                 const category = item.querySelector('.project-type').textContent;
-
                 const beforeImg = item.querySelector('.before-image img').src;
                 const afterImg = item.querySelector('.after-image img').src;
 
@@ -311,53 +362,36 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('lightboxLocation').textContent = location;
                 document.getElementById('lightboxDuration').textContent = duration;
                 document.getElementById('lightboxCategory').textContent = category;
-
                 document.getElementById('lightboxBeforeImg').src = beforeImg;
                 document.getElementById('lightboxAfterImg').src = afterImg;
 
                 lightboxModal.classList.add('active');
                 document.body.style.overflow = 'hidden';
 
-                // Initialize slider for lightbox
+                // Always re-initialize lightbox slider with fresh position
                 setTimeout(() => {
                     const lightboxSlider = document.getElementById('lightboxSlider');
-                    if (lightboxSlider && !lightboxSlider.dataset.sliderInit) {
-                        console.log('Initializing lightbox slider');
-                        new BeforeAfterSlider(lightboxSlider);
+                    if (lightboxSlider) {
+                        if (lightboxSliderInstance) lightboxSliderInstance.destroy();
+                        lightboxSliderInstance = new BeforeAfterSlider(lightboxSlider);
                     }
-                }, 150);
+                }, 100);
             });
         });
 
-        lightboxClose.addEventListener('click', () => {
+        function closeLightbox() {
             lightboxModal.classList.remove('active');
             document.body.style.overflow = 'auto';
-        });
+        }
 
+        lightboxClose.addEventListener('click', closeLightbox);
         lightboxModal.addEventListener('click', (e) => {
-            if (e.target === lightboxModal) {
-                lightboxModal.classList.remove('active');
-                document.body.style.overflow = 'auto';
-            }
+            if (e.target === lightboxModal) closeLightbox();
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && lightboxModal.classList.contains('active')) closeLightbox();
         });
     }
 });
 
-// Backup: Initialize on window load
-window.addEventListener('load', () => {
-    console.log('Window Loaded - Re-checking sliders...');
-    setTimeout(() => {
-        initAllSliders();
-    }, 100);
-});
-
-// Additional backup: Re-initialize after delay (for lazy-loaded content)
-setTimeout(() => {
-    console.log('Delayed initialization check...');
-    initAllSliders();
-}, 1000);
-
-// ===================================
-// LOG INITIALIZATION
-// ===================================
-console.log('PJ Pressure Washing website initialized successfully!');
+window.addEventListener('load', initAllSliders);
