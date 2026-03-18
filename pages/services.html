@@ -11,6 +11,218 @@
     <meta name="keywords" content="pressure washing services Fayetteville NC, residential pressure washing Fayetteville, commercial pressure washing Cumberland County, concrete cleaning Fayetteville, storefront cleaning Fayetteville NC" />
     <link rel="stylesheet" href="../assets/css/styles.css" />
 
+    <style>
+      /* ── V1: Numbered Cards ── */
+      .v1-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+        margin-top: 2rem;
+      }
+      .v1-card {
+        background: #fff;
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 2rem;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+        transition: var(--transition);
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+      .v1-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 32px rgba(0,0,0,0.13);
+        border-color: var(--primary-color);
+      }
+      .v1-card-number {
+        position: absolute;
+        top: -0.5rem;
+        right: 1rem;
+        font-size: 7rem;
+        font-weight: 900;
+        color: var(--primary-color);
+        opacity: 0.07;
+        line-height: 1;
+        pointer-events: none;
+        user-select: none;
+        letter-spacing: -4px;
+      }
+      .v1-card-header {
+        display: flex;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+      .v1-icon-box {
+        flex: 0 0 48px;
+        width: 48px;
+        height: 48px;
+        background: var(--primary-color);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .v1-icon-box svg {
+        width: 24px;
+        height: 24px;
+        stroke: #fff;
+      }
+      .v1-card-title-group h3 {
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: var(--text-dark);
+        margin-bottom: 0.2rem;
+        line-height: 1.3;
+      }
+      .v1-card-title-group .v1-subtitle {
+        font-style: italic;
+        color: var(--text-light);
+        font-size: 0.9rem;
+      }
+      .v1-card p.v1-desc {
+        color: var(--text-light);
+        font-size: 0.95rem;
+        line-height: 1.65;
+      }
+      .v1-features {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.35rem 1rem;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+      .v1-features li {
+        font-size: 0.875rem;
+        color: var(--text-dark);
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+      }
+      .v1-features li::before {
+        content: '';
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        flex: 0 0 16px;
+        background-color: var(--primary-color);
+        mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E");
+        mask-size: contain;
+        mask-repeat: no-repeat;
+        -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E");
+        -webkit-mask-size: contain;
+        -webkit-mask-repeat: no-repeat;
+      }
+      .v1-meta {
+        font-size: 0.8rem;
+        font-style: italic;
+        color: var(--text-light);
+        background: var(--bg-gray);
+        border-left: 3px solid var(--primary-color);
+        padding: 0.6rem 0.8rem;
+        border-radius: 0 6px 6px 0;
+        line-height: 1.5;
+      }
+      .v1-card .btn {
+        align-self: flex-start;
+        margin-top: auto;
+      }
+      /* Why Choose panel */
+      .v1-why-panel {
+        background: var(--primary-dark);
+        border-radius: 16px;
+        padding: 3rem 2.5rem;
+        margin-top: 3rem;
+        color: #fff;
+      }
+      .v1-why-panel h2 {
+        text-align: center;
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 2rem;
+        color: #fff;
+      }
+      .v1-why-panel h2 span {
+        color: var(--secondary-color);
+      }
+      .v1-why-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1.5rem;
+        margin-bottom: 2.5rem;
+      }
+      .v1-why-item { text-align: center; }
+      .v1-why-icon {
+        width: 52px;
+        height: 52px;
+        background: rgba(255,255,255,0.1);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 0.75rem;
+        border: 2px solid rgba(255,255,255,0.2);
+      }
+      .v1-why-icon svg {
+        width: 24px;
+        height: 24px;
+        stroke: var(--secondary-color);
+      }
+      .v1-why-item h4 {
+        font-size: 1rem;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 0.4rem;
+      }
+      .v1-why-item p {
+        font-size: 0.85rem;
+        color: rgba(255,255,255,0.7);
+        line-height: 1.5;
+      }
+      .v1-cta-row {
+        text-align: center;
+        border-top: 1px solid rgba(255,255,255,0.15);
+        padding-top: 2.5rem;
+      }
+      .v1-cta-row h3 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 0.5rem;
+      }
+      .v1-cta-row p {
+        color: rgba(255,255,255,0.75);
+        margin-bottom: 1.5rem;
+      }
+      .v1-cta-row .cta-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+      .service-notice-banner {
+        background: #fff3cd;
+        border: 1px solid #ffc107;
+        border-left: 4px solid #ffc107;
+        color: #856404;
+        padding: 0.9rem 1.2rem;
+        border-radius: 6px;
+        margin-bottom: 2rem;
+        font-size: 0.95rem;
+      }
+      @media (max-width: 900px) {
+        .v1-grid { grid-template-columns: 1fr; }
+        .v1-why-grid { grid-template-columns: repeat(2, 1fr); }
+      }
+      @media (max-width: 560px) {
+        .v1-why-grid { grid-template-columns: 1fr 1fr; }
+        .v1-why-panel { padding: 2rem 1.25rem; }
+      }
+    </style>
+
     <!-- Favicon / Icons -->
     <link
       rel="icon"
@@ -167,285 +379,202 @@
     <section class="section section-gray">
       <div class="container">
         <div class="service-notice-banner">
-          <strong>⚠️ Service Update:</strong> We no longer provide roof and gutter cleaning services.
+          <strong>Service Update:</strong> We no longer provide roof and gutter cleaning services.
         </div>
-        <div class="services-grid">
-          <!-- Residential Pressure Washing -->
-          <div class="service-card">
-            <div class="service-icon">
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                <polyline points="9 22 9 12 15 12 15 22" />
-              </svg>
-            </div>
-            <div class="service-content">
-              <h3>Residential Pressure Washing</h3>
-              <p class="service-subtitle">Transform your home's exterior</p>
-              <p>
-                Professional cleaning for driveways, walkways, patios, retaining
-                walls, fences, and wood decks. We tackle stubborn red clay
-                stains and restore your concrete surfaces to look brand new.
-              </p>
-              <ul class="service-features">
-                <li>Driveways & Walkways</li>
-                <li>Patios & Decks</li>
-                <li>Fences & Walls</li>
-                <li>Red Clay Removal</li>
-              </ul>
-              <div class="service-areas">
-                <strong>Service Areas:</strong> Fayetteville, Cameron, Eastover,
-                Spring Lake, Hope Mills and all of Cumberland, Lee, Harnett &
-                Hoke Counties.
+        <div class="v1-grid">
+
+          <!-- 01 Residential -->
+          <div class="v1-card">
+            <span class="v1-card-number">01</span>
+            <div class="v1-card-header">
+              <div class="v1-icon-box">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                  <polyline points="9 22 9 12 15 12 15 22" />
+                </svg>
               </div>
-              <a href="contact.html" class="btn btn-primary">Get Free Quote &rarr;</a>
+              <div class="v1-card-title-group">
+                <h3>Residential Pressure Washing</h3>
+                <span class="v1-subtitle">Transform your home's exterior</span>
+              </div>
             </div>
+            <p class="v1-desc">Professional cleaning for driveways, walkways, patios, retaining walls, fences, and wood decks. We tackle stubborn red clay stains and restore your concrete surfaces to look brand new.</p>
+            <ul class="v1-features">
+              <li>Driveways &amp; Walkways</li>
+              <li>Patios &amp; Decks</li>
+              <li>Fences &amp; Walls</li>
+              <li>Red Clay Removal</li>
+            </ul>
+            <div class="v1-meta"><strong>Service Areas:</strong> Fayetteville, Cameron, Eastover, Spring Lake, Hope Mills and all of Cumberland, Lee, Harnett &amp; Hoke Counties.</div>
+            <a href="contact.html" class="btn btn-primary">Get Free Quote &rarr;</a>
           </div>
 
-          <!-- Storefront Pressure Washing -->
-          <div class="service-card">
-            <div class="service-icon">
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <path
-                  d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"
-                />
-                <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
-                <line x1="12" y1="22.08" x2="12" y2="12" />
-              </svg>
-            </div>
-            <div class="service-content">
-              <h3>Storefront Pressure Washing</h3>
-              <p class="service-subtitle">
-                Keep your business looking professional
-              </p>
-              <p>
-                Tenants and customers expect clean buildings and entryways.
-                Regular cleanings maintain high occupancy rates and prevent the
-                "neglected" appearance that drives customers to shop online.
-              </p>
-              <ul class="service-features">
-                <li>Storefronts & Entryways</li>
-                <li>Exposed Masonry</li>
-                <li>Painted EIFS</li>
-                <li>Canvas Awnings</li>
-              </ul>
-              <div class="service-benefits">
-                <strong>Benefits:</strong> Higher occupancy rates, better
-                customer perception, increased foot traffic.
+          <!-- 02 Storefront -->
+          <div class="v1-card">
+            <span class="v1-card-number">02</span>
+            <div class="v1-card-header">
+              <div class="v1-icon-box">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                  <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+                  <line x1="12" y1="22.08" x2="12" y2="12" />
+                </svg>
               </div>
-              <a href="contact.html" class="btn btn-primary">Get Free Quote &rarr;</a>
+              <div class="v1-card-title-group">
+                <h3>Storefront Pressure Washing</h3>
+                <span class="v1-subtitle">Keep your business looking professional</span>
+              </div>
             </div>
+            <p class="v1-desc">Tenants and customers expect clean buildings and entryways. Regular cleanings maintain high occupancy rates and prevent the "neglected" appearance that drives customers to shop online.</p>
+            <ul class="v1-features">
+              <li>Storefronts &amp; Entryways</li>
+              <li>Exposed Masonry</li>
+              <li>Painted EIFS</li>
+              <li>Canvas Awnings</li>
+            </ul>
+            <div class="v1-meta"><strong>Benefits:</strong> Higher occupancy rates, better customer perception, increased foot traffic.</div>
+            <a href="contact.html" class="btn btn-primary">Get Free Quote &rarr;</a>
           </div>
 
-          <!-- Concrete Pressure Washing -->
-          <div class="service-card">
-            <div class="service-icon">
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-                <line x1="9" y1="9" x2="15" y2="15" />
-                <line x1="15" y1="9" x2="9" y2="15" />
-              </svg>
-            </div>
-            <div class="service-content">
-              <h3>Concrete Pressure Washing</h3>
-              <p class="service-subtitle">Restore your concrete surfaces</p>
-              <p>
-                Professional concrete cleaning removes oil stains, dirt buildup,
-                and discoloration. Perfect for parking lots, warehouse floors,
-                and exterior concrete surfaces that need deep cleaning.
-              </p>
-              <ul class="service-features">
-                <li>Parking Lots</li>
-                <li>Warehouse Floors</li>
-                <li>Drive-Thrus</li>
-                <li>Gas Stations</li>
-              </ul>
-              <div class="service-process">
-                <strong>Our Process:</strong> Pre-treatment, high-pressure
-                washing, post-inspection for complete satisfaction.
+          <!-- 03 Concrete -->
+          <div class="v1-card">
+            <span class="v1-card-number">03</span>
+            <div class="v1-card-header">
+              <div class="v1-icon-box">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                  <line x1="3" y1="9" x2="21" y2="9" />
+                  <line x1="3" y1="15" x2="21" y2="15" />
+                  <line x1="9" y1="3" x2="9" y2="21" />
+                  <line x1="15" y1="3" x2="15" y2="21" />
+                </svg>
               </div>
-              <a href="contact.html" class="btn btn-primary">Get Free Quote &rarr;</a>
+              <div class="v1-card-title-group">
+                <h3>Concrete Pressure Washing</h3>
+                <span class="v1-subtitle">Restore your concrete surfaces</span>
+              </div>
             </div>
+            <p class="v1-desc">Professional concrete cleaning removes oil stains, dirt buildup, and discoloration. Perfect for parking lots, warehouse floors, and exterior concrete surfaces that need deep cleaning.</p>
+            <ul class="v1-features">
+              <li>Parking Lots</li>
+              <li>Warehouse Floors</li>
+              <li>Drive-Thrus</li>
+              <li>Gas Stations</li>
+            </ul>
+            <div class="v1-meta"><strong>Our Process:</strong> Pre-treatment, high-pressure washing, post-inspection for complete satisfaction.</div>
+            <a href="contact.html" class="btn btn-primary">Get Free Quote &rarr;</a>
           </div>
 
-
-          <!-- Dumpster Pad Cleaning -->
-          <div class="service-card">
-            <div class="service-icon">
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <rect x="1" y="3" width="15" height="13" />
-                <polygon points="16,8 20,8 23,11 23,16 16,16" />
-                <circle cx="5.5" cy="18.5" r="2.5" />
-                <circle cx="18.5" cy="18.5" r="2.5" />
-              </svg>
-            </div>
-            <div class="service-content">
-              <h3>Dumpster Pad Cleaning</h3>
-              <p class="service-subtitle">Specialized pad cleaning services</p>
-              <p>
-                Dumpster pads accumulate tough dirt, debris, and stains from regular use. We provide thorough cleaning and restoration of concrete dumpster pads to maintain cleanliness and safety.
-              </p>
-              <ul class="service-features">
-                <li>Concrete Pad Cleaning</li>
-                <li>Stain Removal</li>
-                <li>Heavy-Duty Washing</li>
-                <li>Debris Removal</li>
-              </ul>
-              <div class="service-specialty">
-                <strong>Specialty Service:</strong> Tough grime removal for dumpster pads and surrounding areas.
+          <!-- 04 Dumpster Pad -->
+          <div class="v1-card">
+            <span class="v1-card-number">04</span>
+            <div class="v1-card-header">
+              <div class="v1-icon-box">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="1" y="3" width="15" height="13" />
+                  <polygon points="16,8 20,8 23,11 23,16 16,16" />
+                  <circle cx="5.5" cy="18.5" r="2.5" />
+                  <circle cx="18.5" cy="18.5" r="2.5" />
+                </svg>
               </div>
-              <a href="contact.html" class="btn btn-primary">Get Free Quote &rarr;</a>
+              <div class="v1-card-title-group">
+                <h3>Dumpster Pad Cleaning</h3>
+                <span class="v1-subtitle">Specialized pad cleaning services</span>
+              </div>
             </div>
+            <p class="v1-desc">Dumpster pads accumulate tough dirt, debris, and stains from regular use. We provide thorough cleaning and restoration of concrete dumpster pads to maintain cleanliness and safety.</p>
+            <ul class="v1-features">
+              <li>Concrete Pad Cleaning</li>
+              <li>Stain Removal</li>
+              <li>Heavy-Duty Washing</li>
+              <li>Debris Removal</li>
+            </ul>
+            <div class="v1-meta"><strong>Specialty Service:</strong> Tough grime removal for dumpster pads and surrounding areas.</div>
+            <a href="contact.html" class="btn btn-primary">Get Free Quote &rarr;</a>
           </div>
 
-          <!-- Trash Bin Cleaning -->
-          <div class="service-card">
-            <div class="service-icon">
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <polyline points="3 6 5 6 21 6" />
-                <path
-                  d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
-                />
-              </svg>
-            </div>
-            <div class="service-content">
-              <h3>Trash Bin Cleaning</h3>
-              <p class="service-subtitle">Eliminate odors and bacteria</p>
-              <p>
-                Dirty trash bins create unpleasant odors, attract pests, and
-                degrade your property appearance. Our professional cleaning
-                eliminates bacteria, flies, and odors for a healthier
-                environment.
-              </p>
-              <ul class="service-features">
-                <li>Odor Elimination</li>
-                <li>Bacteria Removal</li>
-                <li>Pest Deterrence</li>
-                <li>Scheduled Cleaning</li>
-              </ul>
-              <div class="service-health">
-                <strong>Health Benefits:</strong> Reduces flies, maggots,
-                rodents, and bacteria for a healthier property.
+          <!-- 05 Trash Bin -->
+          <div class="v1-card">
+            <span class="v1-card-number">05</span>
+            <div class="v1-card-header">
+              <div class="v1-icon-box">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="3 6 5 6 21 6" />
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                </svg>
               </div>
-              <a href="contact.html" class="btn btn-primary">Get Free Quote &rarr;</a>
+              <div class="v1-card-title-group">
+                <h3>Trash Bin Cleaning</h3>
+                <span class="v1-subtitle">Eliminate odors and bacteria</span>
+              </div>
             </div>
+            <p class="v1-desc">Dirty trash bins create unpleasant odors, attract pests, and degrade your property appearance. Our professional cleaning eliminates bacteria, flies, and odors for a healthier environment.</p>
+            <ul class="v1-features">
+              <li>Odor Elimination</li>
+              <li>Bacteria Removal</li>
+              <li>Pest Deterrence</li>
+              <li>Scheduled Cleaning</li>
+            </ul>
+            <div class="v1-meta"><strong>Health Benefits:</strong> Reduces flies, maggots, rodents, and bacteria for a healthier property.</div>
+            <a href="contact.html" class="btn btn-primary">Get Free Quote &rarr;</a>
           </div>
 
-          <!-- Commercial Littering Service -->
-          <div class="service-card">
-            <div class="service-icon">
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <path d="M3 6l3 0 0 12a3 3 0 003 3h6a3 3 0 003-3V6l3 0" />
-                <path d="M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2" />
-                <line x1="10" y1="11" x2="10" y2="17" />
-                <line x1="14" y1="11" x2="14" y2="17" />
-              </svg>
-            </div>
-            <div class="service-content">
-              <h3>Commercial Littering Service</h3>
-              <p class="service-subtitle">Keep your property clean and tidy</p>
-              <p>
-                Keep your commercial property clean and presentable with our
-                scheduled litter removal service. We pick up trash, clear
-                containers, and tidy dumpster areas on your schedule.
-              </p>
-              <ul class="service-features">
-                <li>Daily or Weekly Service</li>
-                <li>Trash Removal & Disposal</li>
-                <li>Dumpster Area Cleanup</li>
-                <li>Hourly Billing</li>
-              </ul>
-              <div class="service-pricing">
-                <strong>Pricing:</strong> Charged by the hour
+          <!-- 06 Commercial Littering -->
+          <div class="v1-card">
+            <span class="v1-card-number">06</span>
+            <div class="v1-card-header">
+              <div class="v1-icon-box">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 6l3 0 0 12a3 3 0 003 3h6a3 3 0 003-3V6l3 0" />
+                  <path d="M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2" />
+                  <line x1="10" y1="11" x2="10" y2="17" />
+                  <line x1="14" y1="11" x2="14" y2="17" />
+                </svg>
               </div>
-              <a href="contact.html" class="btn btn-primary">Get Free Quote &rarr;</a>
+              <div class="v1-card-title-group">
+                <h3>Commercial Littering Service</h3>
+                <span class="v1-subtitle">Keep your property clean and tidy</span>
+              </div>
             </div>
+            <p class="v1-desc">Keep your commercial property clean and presentable with our scheduled litter removal service. We pick up trash, clear containers, and tidy dumpster areas on your schedule.</p>
+            <ul class="v1-features">
+              <li>Daily or Weekly Service</li>
+              <li>Trash Removal &amp; Disposal</li>
+              <li>Dumpster Area Cleanup</li>
+              <li>Hourly Billing</li>
+            </ul>
+            <div class="v1-meta"><strong>Pricing:</strong> Charged by the hour.</div>
+            <a href="contact.html" class="btn btn-primary">Get Free Quote &rarr;</a>
           </div>
 
         </div>
-      </div>
-    </section>
 
-    <!-- Why Choose Us -->
-    <section class="section">
-      <div class="container">
-        <div class="why-choose-us">
-          <h2>Why Choose PJ Pressure Washing?</h2>
-          <div class="benefits-grid">
-            <div class="benefit-item">
-              <div class="benefit-icon">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                >
-                  <path
-                    d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
-                  />
+        <!-- Why Choose + CTA Panel -->
+        <div class="v1-why-panel">
+          <h2>Why Choose <span>PJ Pressure Washing?</span></h2>
+          <div class="v1-why-grid">
+            <div class="v1-why-item">
+              <div class="v1-why-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
                 </svg>
               </div>
               <h4>6+ Years Experience</h4>
-              <p>
-                Serving Fayetteville and surrounding areas with professional
-                expertise
-              </p>
+              <p>Serving Fayetteville and surrounding areas with professional expertise</p>
             </div>
-            <div class="benefit-item">
-              <div class="benefit-icon">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                >
+            <div class="v1-why-item">
+              <div class="v1-why-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
                   <polyline points="22 4 12 14.01 9 11.01" />
                 </svg>
               </div>
               <h4>100% Satisfaction</h4>
-              <p>
-                If you're not happy, we're not done — simple as that
-                guarantee
-              </p>
+              <p>If you're not happy, we're not done — simple as that guarantee</p>
             </div>
-            <div class="benefit-item">
-              <div class="benefit-icon">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                >
+            <div class="v1-why-item">
+              <div class="v1-why-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <circle cx="12" cy="12" r="10" />
                   <polyline points="12 6 12 12 16 14" />
                 </svg>
@@ -453,42 +582,26 @@
               <h4>24/7 Availability</h4>
               <p>Call or text anytime for service and emergency needs</p>
             </div>
-            <div class="benefit-item">
-              <div class="benefit-icon">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                >
-                  <path
-                    d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"
-                  />
+            <div class="v1-why-item">
+              <div class="v1-why-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
                 </svg>
               </div>
-              <h4>Licensed & Insured</h4>
+              <h4>Licensed &amp; Insured</h4>
               <p>Fully insured and licensed for your peace of mind</p>
             </div>
           </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- CTA Section -->
-    <section class="cta-section">
-      <div class="container">
-        <div class="cta-content">
-          <h2>Ready to Transform Your Property?</h2>
-          <p>Get a free, no-obligation estimate within 24 hours</p>
-          <div class="cta-buttons">
-            <a href="contact.html" class="btn btn-primary btn-lg"
-              >Get Free Estimate</a
-            >
-            <a href="tel:9107586910" class="btn btn-secondary btn-lg"
-              >Call (910) 758-6910</a
-            >
+          <div class="v1-cta-row">
+            <h3>Ready to Transform Your Property?</h3>
+            <p>Get a free, no-obligation estimate within 24 hours</p>
+            <div class="cta-buttons">
+              <a href="contact.html" class="btn btn-primary btn-lg">Get Free Estimate</a>
+              <a href="tel:9107586910" class="btn btn-secondary btn-lg">Call (910) 758-6910</a>
+            </div>
           </div>
         </div>
+
       </div>
     </section>
 
