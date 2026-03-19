@@ -179,32 +179,33 @@ const contactForm = document.getElementById('contactForm');
 const successMessage = document.getElementById('successMessage');
 
 if (contactForm) {
+    emailjs.init('xr7buqF-wb6GEYvOb');
+
     contactForm.addEventListener('submit', async (e) => {
         e.preventDefault();
 
         const submitBtn = contactForm.querySelector('[type="submit"]');
-        const originalText = submitBtn.textContent;
         submitBtn.textContent = 'Sending...';
         submitBtn.disabled = true;
 
-        try {
-            const response = await fetch(contactForm.action, {
-                method: 'POST',
-                body: new FormData(contactForm),
-                headers: { 'Accept': 'application/json' }
-            });
+        const templateParams = {
+            name: contactForm.name.value,
+            email: contactForm.email.value,
+            phone: contactForm.phone.value,
+            address: contactForm.address.value,
+            service: contactForm.service.value,
+            message: contactForm.message.value,
+        };
 
-            if (response.ok) {
-                contactForm.style.display = 'none';
-                if (successMessage) {
-                    successMessage.classList.add('visible');
-                    successMessage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                }
-            } else {
-                submitBtn.textContent = 'Failed — Try Again';
-                submitBtn.disabled = false;
+        try {
+            await emailjs.send('service_9ukaak8', 'template_7khptr3', templateParams);
+            contactForm.style.display = 'none';
+            if (successMessage) {
+                successMessage.classList.add('visible');
+                successMessage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             }
-        } catch {
+        } catch (err) {
+            console.error('EmailJS error:', err);
             submitBtn.textContent = 'Failed — Try Again';
             submitBtn.disabled = false;
         }
